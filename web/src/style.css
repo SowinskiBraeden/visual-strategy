@@ -7,6 +7,14 @@
   --accent: #d4f24a;
   --accent-dim: rgba(212, 242, 74, 0.12);
 
+  --soft: #cf5050;
+  --medium: #d7a63c;
+  --hard: #c6cfdb;
+  --pit-line: #4f9bf5;
+  --pit-road: #d96bd0;
+  --racing: #4f9bf5;
+  --axis: #3b4552;
+
   font: 16px/1.5 system-ui, 'Segoe UI', Roboto, sans-serif;
   color-scheme: dark;
   color: var(--text);
@@ -247,4 +255,686 @@ footer a:hover {
   .cards {
     grid-template-columns: 1fr;
   }
+}
+
+/* tutorial stages */
+
+.eyebrow {
+  margin: 0 0 10px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.learn h1 {
+  font-size: 32px;
+}
+
+.learn .lede {
+  max-width: 46rem;
+}
+
+.stage-body {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 36px 0 40px;
+}
+
+.stage-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.stage-nav .btn {
+  margin-top: 0;
+  padding: 10px 18px;
+}
+
+.dots {
+  display: flex;
+  gap: 8px;
+  margin: 0 auto;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+.dot.on {
+  background: var(--accent);
+}
+
+/* demos */
+
+.demo {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* For demos whose width comes from the figure rather than its text. */
+.demo.narrow {
+  width: 620px;
+}
+
+.demo-sum {
+  width: 0;
+  min-width: 100%;
+  margin-top: 4px;
+}
+
+[data-compound='soft'] {
+  --c: var(--soft);
+}
+[data-compound='medium'] {
+  --c: var(--medium);
+}
+[data-compound='hard'] {
+  --c: var(--hard);
+}
+[data-compound='pit'] {
+  --c: var(--pit-line);
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.choice .swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: var(--c);
+  border: 1px solid rgba(0, 0, 0, 0.45);
+}
+
+.choice small {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.choice[aria-pressed='true'] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+/* block chart */
+
+.chart {
+  --gap: 4px;
+  display: grid;
+  grid-template-areas:
+    'y plot x'
+    '. axis .'
+    '. control .';
+  grid-template-columns: auto auto auto;
+  justify-content: start;
+  align-items: end;
+  gap: 8px 12px;
+  margin: 0;
+  padding-top: 44px;
+}
+
+.chart-y {
+  grid-area: y;
+  align-self: start;
+  text-align: right;
+  font-size: 13px;
+  line-height: 1.3;
+  color: var(--muted);
+}
+
+.chart-x {
+  grid-area: x;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.plot {
+  grid-area: plot;
+  position: relative;
+  box-sizing: content-box;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--gap);
+  height: calc(var(--rows) * var(--block) + (var(--rows) - 1) * var(--gap));
+  border-left: 2px solid var(--axis);
+  border-bottom: 2px solid var(--axis);
+}
+
+.col {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--gap);
+  width: var(--block);
+}
+
+.col i {
+  display: block;
+  height: var(--block);
+  border-radius: 3px;
+  background: var(--c);
+  border: 1px solid rgba(0, 0, 0, 0.45);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.axis {
+  grid-area: axis;
+  display: flex;
+  gap: var(--gap);
+  padding-left: 2px;
+}
+
+.axis span {
+  width: var(--block);
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.pit-marker {
+  position: absolute;
+  top: -30px;
+  bottom: 0;
+  left: calc(var(--pit) * (var(--block) + var(--gap)) - var(--gap) / 2);
+  width: 2px;
+  transform: translateX(-1px);
+  background: var(--pit-line);
+  z-index: 1;
+}
+
+.pit-marker span {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--pit-line);
+  color: #0d1117;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* slider */
+
+.control {
+  grid-area: control;
+  padding-left: 2px;
+  margin-top: 20px;
+}
+
+.slider {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.slider-label {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.slider-label strong {
+  color: var(--text);
+}
+
+.slider.plain {
+  max-width: 420px;
+  margin-top: 28px;
+}
+
+.slider input {
+  --thumb: 16px;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  margin: 0;
+  height: var(--thumb);
+  background: transparent;
+  cursor: pointer;
+}
+
+/* In the chart grid the track spans lap --from to lap --to of the plot above,
+   so the thumb sits exactly where the pit marker is drawn. */
+.control .slider input {
+  width: calc(
+    (var(--to) - var(--from)) * (var(--block) + var(--gap)) + var(--thumb)
+  );
+  margin-left: calc(
+    var(--from) * (var(--block) + var(--gap)) - var(--gap) / 2 - var(--thumb) / 2
+  );
+}
+
+.slider input::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border);
+}
+
+.slider input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: var(--thumb);
+  height: var(--thumb);
+  margin-top: calc((4px - var(--thumb)) / 2);
+  border: none;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.slider input::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border);
+}
+
+.slider input::-moz-range-thumb {
+  width: var(--thumb);
+  height: var(--thumb);
+  border: none;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.slider input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+}
+
+/* totals */
+
+.totals {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.totals-label {
+  width: 72px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.bar {
+  display: flex;
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.seg {
+  flex: var(--w) 1 0;
+  padding: 9px 0;
+  text-align: center;
+  font-weight: 700;
+  color: #1a1505;
+  background: var(--c);
+}
+
+.seg[data-compound='soft'] {
+  color: #fff;
+}
+
+.sum {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.totals.best .sum {
+  color: var(--accent);
+}
+
+.pit-chip {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--pit-line);
+  color: #0d1117;
+  font-size: 12px;
+}
+
+.note {
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.note.on {
+  color: var(--accent);
+}
+
+/* strategy comparison */
+
+.strategy {
+  margin-bottom: 26px;
+}
+
+.strategy-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 4px;
+}
+
+.strategy-name {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.strategy-sum,
+.solve .side {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.strategy-sum b,
+.solve b {
+  font-size: 19px;
+  color: var(--text);
+}
+
+/* Solving for P: the two totals from the charts, worked down a line at a time. */
+.solve {
+  margin-top: 34px;
+}
+
+.solve-row {
+  display: grid;
+  grid-template-columns: 1fr 34px 1fr;
+  align-items: center;
+  gap: 0 8px;
+  margin: 0 0 12px;
+}
+
+.solve-row .side:first-child {
+  justify-content: flex-end;
+}
+
+.solve-row .eq {
+  text-align: center;
+  font-size: 18px;
+  color: var(--muted);
+}
+
+.solve-row .hint {
+  grid-column: 1 / -1;
+  margin-top: 4px;
+  font-size: 12px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.solve-row.heads .side {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.solve-row.solved {
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.solve-row.solved b {
+  color: var(--accent);
+  font-size: 22px;
+}
+
+.rules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.rules li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rules li strong {
+  color: var(--muted);
+}
+
+.rules li.on,
+.rules li.on strong {
+  color: var(--text);
+}
+
+.verdict {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0 0;
+  padding: 12px 16px;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  background: var(--accent-dim);
+  font-size: 15px;
+}
+
+.verdict-at {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #0d1117;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.verdict.level {
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--muted);
+}
+
+.verdict.level .verdict-at {
+  background: var(--border);
+  color: var(--text);
+}
+
+/* pit delta */
+
+.track {
+  width: 100%;
+  max-width: 620px;
+  margin: 18px 0 0;
+}
+
+.track svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.track figcaption {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.ribbon {
+  fill: none;
+  stroke: #273039;
+  stroke-width: 22;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ribbon.context {
+  stroke: #1d242c;
+}
+
+.track .mark {
+  fill: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.track .marker text {
+  fill: var(--text);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.track .arrow {
+  fill: var(--muted);
+}
+
+.path-pit,
+.path-racing {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.path-pit {
+  stroke: var(--pit-road);
+}
+
+.path-racing {
+  stroke: var(--racing);
+}
+
+.node {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 3;
+}
+
+.runner {
+  stroke: #0d1117;
+  stroke-width: 2;
+}
+
+.runner-pit {
+  fill: var(--pit-road);
+}
+
+.runner-racing {
+  fill: var(--racing);
+}
+
+.legend {
+  display: flex;
+  gap: 20px;
+  margin-top: 14px;
+  font-size: 13px;
+}
+
+.key {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+}
+
+.key::before {
+  content: '';
+  width: 18px;
+  height: 4px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.key-pit::before {
+  background: var(--pit-road);
+}
+
+.key-racing::before {
+  background: var(--racing);
+}
+
+.delta {
+  margin-top: 24px;
+  font-size: 16px;
+  color: var(--muted);
+}
+
+.delta p {
+  display: grid;
+  grid-template-columns: 20px 78px auto;
+  gap: 10px;
+  align-items: baseline;
+  margin: 0 0 8px;
+}
+
+.delta .op {
+  text-align: right;
+}
+
+.delta .num {
+  text-align: right;
+  font-weight: 700;
+}
+
+.delta .num.pit-road {
+  color: var(--pit-road);
+}
+
+.delta .num.racing {
+  color: var(--racing);
+}
+
+.delta-total {
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  color: var(--text);
+}
+
+.delta-total strong {
+  font-size: 20px;
 }

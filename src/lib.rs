@@ -3,18 +3,18 @@ mod utils;
 use wasm_bindgen::prelude::*;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-enum TyreCompound {
+pub enum TyreCompound {
     Soft,
     Medium,
     Hard,
 }
 
-struct TyreParams {
+pub struct TyreParams {
     offset_seconds: f32,
     degradation_per_lap_seconds: f32,
 }
 
-struct TyreOpts {
+pub struct TyreOpts {
     soft: TyreParams,
     medium: TyreParams,
     hard: TyreParams,
@@ -22,7 +22,7 @@ struct TyreOpts {
 
 // #[wasm_bindgen]
 impl TyreParams {
-    fn new(offset_seconds: f32, degradation_per_lap_seconds: f32) -> Self {
+    pub fn new(offset_seconds: f32, degradation_per_lap_seconds: f32) -> Self {
         TyreParams {
             offset_seconds,
             degradation_per_lap_seconds,
@@ -64,7 +64,11 @@ pub struct Model {
 
 impl Model {
     // T(a) = B + C + D(a - 1) where a is tyre_age_laps
-    fn predicted_lap_time_seconds(&self, compound: TyreCompound, tyre_age_laps: u8) -> Option<f32> {
+    pub fn predicted_lap_time_seconds(
+        &self,
+        compound: TyreCompound,
+        tyre_age_laps: u8,
+    ) -> Option<f32> {
         match tyre_age_laps {
             0 => None,
             _ => {
@@ -124,14 +128,4 @@ impl Strategy {
         // std::cmp::max(0, self.stints.len() - 1) // can underflow if stints.len() is 0
         self.stints.len().saturating_sub(1)
     }
-}
-
-#[wasm_bindgen]
-extern "C" {
-    fn alert(s: &str);
-}
-
-#[wasm_bindgen]
-pub fn greet() {
-    alert("Hello, visual-strategy!");
 }
