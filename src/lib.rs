@@ -1,14 +1,17 @@
-mod utils;
-
 use wasm_bindgen::prelude::*;
 
+#[wasm_bindgen]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[repr(u8)]
 pub enum TyreCompound {
     Soft,
     Medium,
     Hard,
+    Intermediate,
+    Wet,
 }
 
+#[wasm_bindgen]
 pub struct TyreParams {
     offset_seconds: f32,
     degradation_per_lap_seconds: f32,
@@ -18,9 +21,10 @@ pub struct TyreOpts {
     soft: TyreParams,
     medium: TyreParams,
     hard: TyreParams,
+    intermediate: TyreParams,
+    wet: TyreParams,
 }
 
-// #[wasm_bindgen]
 impl TyreParams {
     pub fn new(offset_seconds: f32, degradation_per_lap_seconds: f32) -> Self {
         TyreParams {
@@ -50,12 +54,15 @@ impl TyreOpts {
             TyreCompound::Soft => &self.soft,
             TyreCompound::Medium => &self.medium,
             TyreCompound::Hard => &self.hard,
+            TyreCompound::Intermediate => &self.intermediate,
+            TyreCompound::Wet => &self.wet,
         }
     }
 }
 
 pub struct ModelOpts {}
 
+#[wasm_bindgen]
 pub struct Model {
     base_lap_time_seconds: f32,
     pit_delta_seconds: f32,
@@ -91,15 +98,33 @@ impl Model {
     }
 
     // T_stint(n) = n(B + C) + D * (n * (n - 1) / 2) where n is laps
-    fn total_stint_time_seconds(&self, compound: TyreCompound, laps: u8) -> f32 {
+    fn total_stint_time_seconds(&self, compound: TyreCompound, laps: u8) -> Option<f32> {
         let n = laps as f32;
         let tyre: &TyreParams = self.tyre_opts.get(compound);
 
-        n * (self.base_lap_time_seconds + tyre.offset_seconds)
-            + tyre.degradation_per_lap_seconds * (n * (n - 1.0) / 2.0)
+        Some(
+            n * (self.base_lap_time_seconds + tyre.offset_seconds)
+                + tyre.degradation_per_lap_seconds * (n * (n - 1.0) / 2.0),
+        )
     }
 
-    fn evaluate_strategy(&self, strat: Strategy) {}
+    fn evaluate_strategy(&self, strat: Strategy) -> Option<f32> {
+        if strat.stints.is_empty() {
+            return None;
+        }
+
+        let pit_loss: f32 = strat.pit_stops() as f32 * self.pit_delta_seconds;
+        let race_time: Option<f32> = strat
+            .stints
+            .iter()
+            .map(|s| self.total_stint_time_summation_seconds(s.compound, s.laps))
+            .sum();
+
+        match race_time {
+            None => None,
+            Some(x) => Some(pit_loss + x),
+        }
+    }
 
     pub fn pit_delta_seconds(&self) -> f32 {
         self.pit_delta_seconds
@@ -110,11 +135,13 @@ impl Model {
     }
 }
 
+#[wasm_bindgen]
 struct Stint {
     compound: TyreCompound,
     laps: u8,
 }
 
+#[wasm_bindgen]
 struct Strategy {
     stints: Vec<Stint>,
 }

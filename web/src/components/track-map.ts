@@ -1,4 +1,5 @@
 import type { Circuit } from '../simulation/circuits.ts';
+import { TRACK_OUTLINES } from '../assets/track-outlines.ts';
 
 /** Animation seconds per second of race time, plus a pause before the replay. */
 const PACE = 0.09;
@@ -55,8 +56,6 @@ export function trackMap(circuit: Circuit): string {
   const slowest = Math.max(circuit.pitSeconds, circuit.trackSeconds);
   const cycle = Number((slowest * PACE + HOLD).toFixed(2));
   const [ax, ay, angle] = circuit.arrow;
-
-  // Each circuit keeps its own aspect, scaled to fit the same box.
   const [, , vw, vh] = circuit.view.split(' ').map(Number) as number[];
   const scale = Math.min(620 / vw!, 340 / vh!);
 
@@ -65,9 +64,7 @@ export function trackMap(circuit: Circuit): string {
   <svg width="${Math.round(vw! * scale)}" height="${Math.round(vh! * scale)}"
     viewBox="${circuit.view}" role="img"
     aria-label="Schematic of the pit lane and the racing line at ${circuit.name}">
-    <path class="ribbon context" d="${circuit.before}" />
-    <path class="ribbon context" d="${circuit.after}" />
-    <path class="ribbon" d="${circuit.racing}" />
+    <g class="track-outline" transform="${circuit.outlineTransform}">${TRACK_OUTLINES[circuit.id] ?? ''}</g>
     <path id="pit-path" class="path-pit" d="${circuit.pit}" />
     <path id="racing-path" class="path-racing" d="${circuit.racing}" />
 

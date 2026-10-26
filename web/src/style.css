@@ -43,10 +43,10 @@ a {
 }
 
 #app {
-  max-width: 1000px;
+  max-width: 1240px;
   min-height: 100svh;
   margin: 0 auto;
-  padding: 20px 16px 24px;
+  padding: 20px 24px 24px;
   display: flex;
   flex-direction: column;
 }
@@ -275,6 +275,62 @@ footer a:hover {
   max-width: 46rem;
 }
 
+.learn-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  width: 100%;
+  flex: 1;
+}
+
+.lesson-menu {
+  display: flex;
+  flex: 0 0 200px;
+  flex-direction: column;
+  gap: 2px;
+  position: sticky;
+  top: 24px;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.lesson {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 9px 0 9px 14px;
+  border-left: 2px solid transparent;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.lesson:hover {
+  color: var(--text);
+}
+
+.lesson.on {
+  border-left-color: var(--accent);
+  color: var(--text);
+}
+
+.lesson-num {
+  flex-shrink: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.lesson.on .lesson-num {
+  color: var(--accent);
+}
+
+.learn-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
 .stage-body {
   display: flex;
   justify-content: center;
@@ -297,21 +353,35 @@ footer a:hover {
   padding: 10px 18px;
 }
 
-.dots {
-  display: flex;
-  gap: 8px;
-  margin: 0 auto;
+.stage-nav .btn.primary {
+  margin-left: auto;
 }
 
-.dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--border);
-}
-
-.dot.on {
-  background: var(--accent);
+@media (max-width: 720px) {
+  .learn-layout {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .lesson-menu {
+    flex: 0 1 auto;
+    flex-direction: row;
+    width: 100%;
+    overflow-x: auto;
+    position: static;
+  }
+  .lesson {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    border-left: none;
+    border-bottom: 2px solid transparent;
+  }
+  .lesson.on {
+    border-left-color: transparent;
+    border-bottom-color: var(--accent);
+  }
+  .lesson-title {
+    white-space: nowrap;
+  }
 }
 
 /* demos */
@@ -796,7 +866,7 @@ footer a:hover {
   max-width: 100%;
   height: auto;
   margin: 0 auto;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .track figcaption {
@@ -805,16 +875,8 @@ footer a:hover {
   color: var(--muted);
 }
 
-.ribbon {
-  fill: none;
-  stroke: #273039;
-  stroke-width: 22;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.ribbon.context {
-  stroke: #1d242c;
+.track-outline {
+  opacity: 0.9;
 }
 
 .track .mark {

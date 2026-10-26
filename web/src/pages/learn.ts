@@ -4,10 +4,13 @@ export function learn(param?: string): string {
   const index = stageIndex(param);
   const stage = stages[index]!;
 
-  const dots = stages
+  const menu = stages
     .map(
-      (s, i) =>
-        `<a class="dot${i === index ? ' on' : ''}" href="#/learn/${i + 1}" aria-label="Stage ${i + 1}: ${s.title}"></a>`,
+      (s, i) => `
+      <a class="lesson${i === index ? ' on' : ''}" href="#/learn/${i + 1}" aria-current="${i === index ? 'page' : 'false'}">
+        <span class="lesson-num">${i + 1}</span>
+        <span class="lesson-title">${s.title}</span>
+      </a>`,
     )
     .join('');
 
@@ -18,17 +21,22 @@ export function learn(param?: string): string {
 
   return `
 <main class="page learn">
-  <p class="eyebrow">Stage ${index + 1} of ${stages.length}</p>
-  <h1>${stage.title}</h1>
-  <p class="lede">${stage.lede}</p>
+  <div class="learn-layout">
+    <nav class="lesson-menu" aria-label="Stages">${menu}</nav>
 
-  <div class="stage-body">${stage.render()}</div>
+    <div class="learn-main">
+      <p class="eyebrow">Stage ${index + 1} of ${stages.length}</p>
+      <h1>${stage.title}</h1>
+      <p class="lede">${stage.lede}</p>
 
-  <nav class="stage-nav">
-    <a class="btn" href="${index === 0 ? '#/' : `#/learn/${index}`}">&larr; Back</a>
-    <span class="dots">${dots}</span>
-    ${next}
-  </nav>
+      <div class="stage-body">${stage.render()}</div>
+
+      <nav class="stage-nav">
+        <a class="btn" href="${index === 0 ? '#/' : `#/learn/${index}`}">&larr; Back</a>
+        ${next}
+      </nav>
+    </div>
+  </div>
 </main>`;
 }
 
