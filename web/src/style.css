@@ -305,6 +305,50 @@ footer a:hover {
   }
 }
 
+/* playground */
+
+.playground-control,
+.preset-card,
+.winner {
+  border: 1px solid var(--border-dark);
+  border-top-color: var(--border);
+  background: var(--surface);
+}
+
+.playground-control {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px 24px;
+  width: 100%;
+  margin-top: 30px;
+  padding: 20px 22px;
+}
+
+.playground-control label { font-weight: 700; }
+.playground-control p { margin: 3px 0 0; color: var(--muted); font-size: 13px; }
+.playground-control output { color: var(--accent); font: 700 20px/1 ui-monospace, monospace; }
+.playground-control input { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); }
+.preset-results { width: 100%; margin-top: 16px; }
+.winner { padding: 14px 18px; color: var(--muted); }
+.winner span { margin-right: 12px; color: var(--accent); font: 700 11px/1 ui-monospace, monospace; text-transform: uppercase; }
+.winner strong { color: var(--text); }
+.preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+.preset-card { padding: 20px; }
+.preset-card.best { border-color: var(--accent); }
+.preset-title { display: flex; align-items: center; justify-content: space-between; }
+.preset-title h2 { margin: 0; }
+.preset-title span { color: var(--muted); font-size: 12px; }
+.preset-card > p { margin: 8px 0 20px; color: var(--muted); font-size: 13px; }
+.preset-card dl { margin: 0; }
+.preset-card dl div { display: flex; justify-content: space-between; padding: 7px 0; }
+.preset-card dt { color: var(--muted); }
+.preset-card dd { margin: 0; font-family: ui-monospace, monospace; }
+.preset-card .preset-total { margin-top: 6px; padding-top: 13px; border-top: 1px solid var(--border-dark); font-weight: 700; }
+
+@media (max-width: 720px) {
+  .preset-grid { grid-template-columns: 1fr; }
+}
+
 /* tutorial stages */
 
 .eyebrow {

@@ -3,7 +3,7 @@ import { header } from './components/header.ts';
 import { footer } from './components/footer.ts';
 import { home } from './pages/home.ts';
 import { learn, mountLearn } from './pages/learn.ts';
-import { playground } from './pages/playground.ts';
+import { mountPlayground, playground } from './pages/playground.ts';
 import { loadSimulation } from './simulation/wasm.ts';
 
 interface Route {
@@ -14,7 +14,7 @@ interface Route {
 const routes: Record<string, Route> = {
   '': { view: home },
   learn: { view: learn, mount: mountLearn },
-  playground: { view: playground },
+  playground: { view: playground, mount: mountPlayground },
 };
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
