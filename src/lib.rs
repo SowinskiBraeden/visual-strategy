@@ -198,14 +198,17 @@ impl PresetComparison {
     }
 }
 
-/// Compare two fixed, valid 50-lap presets while keeping all model details in Rust.
-#[wasm_bindgen]
-pub fn compare_presets(pit_delta_seconds: f32) -> Result<PresetComparison, JsValue> {
-    if !pit_delta_seconds.is_finite() || pit_delta_seconds < 0.0 {
-        return Err(JsValue::from_str("pit delta must be a non-negative number"));
+fn compound(value: u8) -> Result<TyreCompound, JsValue> {
+    match value {
+        0 => Ok(TyreCompound::Soft),
+        1 => Ok(TyreCompound::Medium),
+        2 => Ok(TyreCompound::Hard),
+        _ => Err(JsValue::from_str("unknown tyre compound")),
     }
+}
 
-    let model = Model {
+fn model(pit_delta_seconds: f32) -> Model {
+    Model {
         base_lap_time_seconds: 90.0,
         pit_delta_seconds,
         tyre_opts: TyreOpts {
@@ -215,39 +218,67 @@ pub fn compare_presets(pit_delta_seconds: f32) -> Result<PresetComparison, JsVal
             intermediate: TyreParams::new(4.0, 0.08),
             wet: TyreParams::new(8.0, 0.10),
         },
-    };
+    }
+}
+
+#[wasm_bindgen]
+pub fn compare_strategies(
+    pit_delta_seconds: f32,
+    one_first: u8,
+    one_second: u8,
+    one_stop_lap: u8,
+    two_first: u8,
+    two_second: u8,
+    two_third: u8,
+    two_first_stop_lap: u8,
+    two_second_stop_lap: u8,
+) -> Result<PresetComparison, JsValue> {
+    if !pit_delta_seconds.is_finite() || pit_delta_seconds < 0.0 {
+        return Err(JsValue::from_str("pit delta must be a non-negative number"));
+    }
+    if !(1..50).contains(&one_stop_lap)
+        || two_first_stop_lap == 0
+        || two_first_stop_lap >= two_second_stop_lap
+        || two_second_stop_lap >= 50
+    {
+        return Err(JsValue::from_str(
+            "pit stops must be ordered within the 50-lap race",
+        ));
+    }
+
+    let model = model(pit_delta_seconds);
     let one_stop = Strategy {
         stints: vec![
             Stint {
-                compound: TyreCompound::Medium,
-                laps: 25,
+                compound: compound(one_first)?,
+                laps: one_stop_lap,
             },
             Stint {
-                compound: TyreCompound::Hard,
-                laps: 25,
+                compound: compound(one_second)?,
+                laps: 50 - one_stop_lap,
             },
         ],
     };
     let two_stop = Strategy {
         stints: vec![
             Stint {
-                compound: TyreCompound::Soft,
-                laps: 15,
+                compound: compound(two_first)?,
+                laps: two_first_stop_lap,
             },
             Stint {
-                compound: TyreCompound::Medium,
-                laps: 18,
+                compound: compound(two_second)?,
+                laps: two_second_stop_lap - two_first_stop_lap,
             },
             Stint {
-                compound: TyreCompound::Hard,
-                laps: 17,
+                compound: compound(two_third)?,
+                laps: 50 - two_second_stop_lap,
             },
         ],
     };
 
     const RACE_LAPS: u16 = 50;
     if one_stop.total_laps() != RACE_LAPS || two_stop.total_laps() != RACE_LAPS {
-        return Err(JsValue::from_str("preset does not cover the 50-lap race"));
+        return Err(JsValue::from_str("strategy does not cover the 50-lap race"));
     }
 
     let one = model
@@ -263,6 +294,12 @@ pub fn compare_presets(pit_delta_seconds: f32) -> Result<PresetComparison, JsVal
         two_stop_track_seconds: two.track_time_seconds,
         two_stop_pit_seconds: two.pit_loss_seconds,
     })
+}
+
+/// Compare the default strategies used when the playground first opens.
+#[wasm_bindgen]
+pub fn compare_presets(pit_delta_seconds: f32) -> Result<PresetComparison, JsValue> {
+    compare_strategies(pit_delta_seconds, 1, 2, 25, 0, 1, 2, 15, 33)
 }
 
 #[cfg(test)]
