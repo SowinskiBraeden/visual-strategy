@@ -15,7 +15,7 @@ export function header(path: string): string {
 <header>
   <a class="brand" href="#/">
     <span class="mark">
-      <svg class="icon" aria-hidden="true"><use href="/icons.svg#flag" /></svg>
+      <svg class="icon" aria-hidden="true"><use href="/icons.svg#tyre" /></svg>
     </span>
     Stint.
   </a>
